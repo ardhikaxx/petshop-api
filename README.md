@@ -1,66 +1,264 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+---
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+````markdown
+# Petshop API - Product Management
 
-## About Laravel
+Petshop API adalah projek berbasis Laravel yang menyediakan endpoint untuk mengelola data produk, termasuk upload gambar dengan penyimpanan di `storage/public` yang dapat diakses publik.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📌 Fitur Utama
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- CRUD (Create, Read, Update, Delete) produk.
+- Upload gambar produk dan simpan di `storage/app/public/products`.
+- Validasi data input.
+- Menyediakan response dalam format JSON.
+- Akses gambar langsung via URL setelah `php artisan storage:link`.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 📦 Instalasi & Persiapan
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/username/petshop-api.git
+   cd petshop-api
+````
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. **Install Dependency**
 
-## Laravel Sponsors
+   ```bash
+   composer install
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+3. **Buat File `.env`**
 
-### Premium Partners
+   ```bash
+   cp .env.example .env
+   ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+4. **Generate App Key**
 
-## Contributing
+   ```bash
+   php artisan key:generate
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+5. **Konfigurasi Database**
+   Edit file `.env`:
 
-## Code of Conduct
+   ```
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=petshop_api
+    DB_USERNAME=root
+    DB_PASSWORD=
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+6. **Migrasi Database**
 
-## Security Vulnerabilities
+   ```bash
+   php artisan migrate
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+7. **Buat Storage Link** (untuk akses gambar)
 
-## License
+   ```bash
+   php artisan storage:link
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+8. **Jalankan Server**
+
+   ```bash
+   php artisan serve
+   ```
+
+---
+
+## 🔗 Endpoint API
+
+### 1. **Get All Products**
+
+* **URL:** `/api/products`
+* **Method:** `GET`
+* **Response:**
+
+```json
+{
+    "status": "success",
+    "data": [
+        {
+            "id": 1,
+            "name": "Dog Food",
+            "description": "Premium dog food",
+            "price": "150000.00",
+            "stock": 50,
+            "image": "products/dogfood.jpg",
+            "category": "Food",
+            "created_at": "2025-08-12T07:00:00.000000Z",
+            "updated_at": "2025-08-12T07:00:00.000000Z"
+        }
+    ],
+    "message": "Products retrieved successfully"
+}
+```
+
+---
+
+### 2. **Create Product**
+
+* **URL:** `/api/products`
+
+* **Method:** `POST`
+
+* **Headers:**
+  `Content-Type: multipart/form-data`
+
+* **Body:**
+  \| Field        | Tipe Data  | Wajib | Keterangan                              |
+  \|--------------|------------|-------|-----------------------------------------|
+  \| name         | string     | ✅    | Nama produk                             |
+  \| description  | string     | ✅    | Deskripsi produk                        |
+  \| price        | numeric    | ✅    | Harga produk                            |
+  \| stock        | integer    | ✅    | Stok produk                             |
+  \| category     | string     | ✅    | Kategori produk                         |
+  \| image        | file       | ❌    | Gambar produk (jpeg,png,jpg,gif, max 2MB) |
+
+* **Contoh Request (cURL):**
+
+```bash
+curl -X POST http://localhost:8000/api/products \
+  -F "name=Dog Food" \
+  -F "description=Premium dog food" \
+  -F "price=150000" \
+  -F "stock=50" \
+  -F "category=Food" \
+  -F "image=@/path/to/dogfood.jpg"
+```
+
+---
+
+### 3. **Get Product By ID**
+
+* **URL:** `/api/products/{id}`
+* **Method:** `GET`
+* **Response jika ditemukan:**
+
+```json
+{
+    "status": "success",
+    "data": {
+        "id": 1,
+        "name": "Dog Food",
+        "description": "Premium dog food",
+        "price": "150000.00",
+        "stock": 50,
+        "image": "products/dogfood.jpg",
+        "category": "Food",
+        "created_at": "2025-08-12T07:00:00.000000Z",
+        "updated_at": "2025-08-12T07:00:00.000000Z"
+    },
+    "message": "Product retrieved successfully"
+}
+```
+
+* **Response jika tidak ditemukan:**
+
+```json
+{
+    "status": "error",
+    "message": "Product not found"
+}
+```
+
+---
+
+### 4. **Update Product**
+
+* **URL:** `/api/products/{id}`
+
+* **Method:** `PUT`
+
+* **Headers:**
+  `Content-Type: multipart/form-data`
+
+* **Body:** (semua field opsional, sama seperti create)
+
+* **Catatan:**
+
+  * Jika mengupload gambar baru, gambar lama akan dihapus otomatis.
+  * Gunakan method `PUT` untuk update.
+
+* **Contoh Request (cURL):**
+
+```bash
+curl -X PUT http://localhost:8000/api/products/1 \
+  -F "name=Updated Dog Food" \
+  -F "price=200000" \
+  -F "image=@/path/to/newimage.jpg"
+```
+
+---
+
+### 5. **Delete Product**
+
+* **URL:** `/api/products/{id}`
+* **Method:** `DELETE`
+* **Response jika berhasil:**
+
+```json
+{
+    "status": "success",
+    "message": "Product deleted successfully"
+}
+```
+
+* **Catatan:**
+
+  * Gambar yang terkait produk akan dihapus dari storage.
+
+---
+
+## 🖼️ Akses Gambar
+
+Gambar tersimpan di folder `storage/app/public/products`.
+Setelah menjalankan:
+
+```bash
+php artisan storage:link
+```
+
+Gambar dapat diakses melalui URL:
+
+```
+http://localhost:8000/storage/products/namafile.jpg
+```
+
+---
+
+## 🧪 Testing API dengan Postman
+
+1. Import endpoint ke Postman.
+2. Gunakan URL `http://localhost:8000/api`.
+3. Sesuaikan method dan body sesuai dokumentasi di atas.
+
+---
+
+## 📚 Tentang Laravel
+
+Laravel adalah framework aplikasi web dengan sintaks yang ekspresif dan elegan.
+Pelajari lebih lanjut di [Laravel Documentation](https://laravel.com/docs).
+
+---
+
+## 📄 Lisensi
+
+Proyek ini menggunakan [MIT License](https://opensource.org/licenses/MIT).
+
+```
+
+---
+
+Kalau mau, aku bisa buatkan **file `.json` Postman Collection** supaya tinggal di-import dan langsung bisa testing semua endpoint.  
+Kalau setuju, nanti aku sertakan di repo kamu biar praktis.
+```
