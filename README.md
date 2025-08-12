@@ -20,7 +20,7 @@ Petshop API adalah projek berbasis Laravel yang menyediakan endpoint untuk menge
 
 1. **Clone Repository**
    ```bash
-   git clone https://github.com/username/petshop-api.git
+   git clone https://github.com/ardhikaxx/petshop-api.git
    cd petshop-api
     ```
 
@@ -74,190 +74,156 @@ Petshop API adalah projek berbasis Laravel yang menyediakan endpoint untuk menge
 
 ---
 
+## 📦 Storage Setup
+
+To handle product image storage:
+
+1. Create the storage link (this will create a symbolic link from `public/storage` to `storage/app/public`):
+   ```bash
+   php artisan storage:link
+   ```
+
+2. Ensure your `.env` has these settings:
+   ```env
+   FILESYSTEM_DISK=public
+   ```
+
+3. The images will be stored in:
+   ```
+   storage/app/public/products
+   ```
+   And accessible via:
+   ```
+   http://your-domain/storage/products/filename.jpg
+   ```
+
 ## 🔗 Endpoint API
 
-### 1. **Get All Products**
+### Base URL
+```
+http://localhost:8000/api
+```
 
-* **URL:** `/api/products`
-* **Method:** `GET`
-* **Response:**
+### Products Endpoints
 
+| Method | Endpoint         | Description                |
+|--------|------------------|----------------------------|
+| GET    | /products        | Get all products           |
+| POST   | /products        | Create a new product       |
+| GET    | /products/{id}   | Get a specific product     |
+| PUT    | /products/{id}   | Update a product           |
+| DELETE | /products/{id}   | Delete a product           |
+
+## Request & Response Examples
+
+### 1. Get All Products
+**Request:**
+```
+GET /api/products
+```
+
+**Response (Success):**
 ```json
 {
-    "status": "success",
-    "data": [
-        {
-            "id": 1,
-            "name": "Dog Food",
-            "description": "Premium dog food",
-            "price": "150000.00",
-            "stock": 50,
-            "image": "products/dogfood.jpg",
-            "category": "Food",
-            "created_at": "2025-08-12T07:00:00.000000Z",
-            "updated_at": "2025-08-12T07:00:00.000000Z"
-        }
-    ],
-    "message": "Products retrieved successfully"
+  "status": "success",
+  "data": [
+    {
+      "id": 1,
+      "name": "Cat Food",
+      "description": "Premium quality cat food",
+      "price": 15.99,
+      "stock": 50,
+      "image": "products/cat-food.jpg",
+      "category": "food",
+      "created_at": "2023-08-12T10:00:00.000000Z",
+      "updated_at": "2023-08-12T10:00:00.000000Z",
+      "image_url": "http://localhost/storage/products/cat-food.jpg"
+    }
+  ],
+  "message": "Products retrieved successfully"
 }
 ```
 
----
+### 2. Create a Product
+**Request:**
+```
+POST /api/products
+Headers:
+  Content-Type: multipart/form-data
+  Accept: application/json
 
-### 2. **Create Product**
-
-* **URL:** `/api/products`
-
-* **Method:** `POST`
-
-* **Headers:**
-  `Content-Type: multipart/form-data`
-
-* **Body:**
-  \| Field        | Tipe Data  | Wajib | Keterangan                              |
-  \|--------------|------------|-------|-----------------------------------------|
-  \| name         | string     | ✅    | Nama produk                             |
-  \| description  | string     | ✅    | Deskripsi produk                        |
-  \| price        | numeric    | ✅    | Harga produk                            |
-  \| stock        | integer    | ✅    | Stok produk                             |
-  \| category     | string     | ✅    | Kategori produk                         |
-  \| image        | file       | ❌    | Gambar produk (jpeg,png,jpg,gif, max 2MB) |
-
-* **Contoh Request (cURL):**
-
-```bash
-curl -X POST http://localhost:8000/api/products \
-  -F "name=Dog Food" \
-  -F "description=Premium dog food" \
-  -F "price=150000" \
-  -F "stock=50" \
-  -F "category=Food" \
-  -F "image=@/path/to/dogfood.jpg"
+Body:
+  name: Dog Food
+  description: Nutritious dog food
+  price: 19.99
+  stock: 30
+  category: food
+  image: [file]
 ```
 
----
-
-### 3. **Get Product By ID**
-
-* **URL:** `/api/products/{id}`
-* **Method:** `GET`
-* **Response jika ditemukan:**
-
+**Response (Success):**
 ```json
 {
-    "status": "success",
-    "data": {
-        "id": 1,
-        "name": "Dog Food",
-        "description": "Premium dog food",
-        "price": "150000.00",
-        "stock": 50,
-        "image": "products/dogfood.jpg",
-        "category": "Food",
-        "created_at": "2025-08-12T07:00:00.000000Z",
-        "updated_at": "2025-08-12T07:00:00.000000Z"
-    },
-    "message": "Product retrieved successfully"
+  "status": "success",
+  "data": {
+    "id": 2,
+    "name": "Dog Food",
+    "description": "Nutritious dog food",
+    "price": 19.99,
+    "stock": 30,
+    "image": "products/dog-food.jpg",
+    "category": "food",
+    "created_at": "2023-08-12T10:05:00.000000Z",
+    "updated_at": "2023-08-12T10:05:00.000000Z",
+    "image_url": "http://localhost/storage/products/dog-food.jpg"
+  },
+  "message": "Product created successfully"
 }
 ```
 
-* **Response jika tidak ditemukan:**
+### 3. Update a Product
+**Request:**
+```
+PUT /api/products/2
+Headers:
+  Content-Type: multipart/form-data
+  Accept: application/json
 
+Body:
+  name: Premium Dog Food
+  price: 24.99
+```
+
+**Response (Success):**
 ```json
 {
-    "status": "error",
-    "message": "Product not found"
+  "status": "success",
+  "data": {
+    "id": 2,
+    "name": "Premium Dog Food",
+    "description": "Nutritious dog food",
+    "price": 24.99,
+    "stock": 30,
+    "image": "products/dog-food.jpg",
+    "category": "food",
+    "created_at": "2023-08-12T10:05:00.000000Z",
+    "updated_at": "2023-08-12T10:10:00.000000Z",
+    "image_url": "http://localhost/storage/products/dog-food.jpg"
+  },
+  "message": "Product updated successfully"
 }
 ```
 
----
-
-### 4. **Update Product**
-
-* **URL:** `/api/products/{id}`
-
-* **Method:** `PUT`
-
-* **Headers:**
-  `Content-Type: multipart/form-data`
-
-* **Body:** (semua field opsional, sama seperti create)
-
-* **Catatan:**
-
-  * Jika mengupload gambar baru, gambar lama akan dihapus otomatis.
-  * Gunakan method `PUT` untuk update.
-
-* **Contoh Request (cURL):**
-
-```bash
-curl -X PUT http://localhost:8000/api/products/1 \
-  -F "name=Updated Dog Food" \
-  -F "price=200000" \
-  -F "image=@/path/to/newimage.jpg"
+### 4. Delete a Product
+**Request:**
+```
+DELETE /api/products/2
 ```
 
----
-
-### 5. **Delete Product**
-
-* **URL:** `/api/products/{id}`
-* **Method:** `DELETE`
-* **Response jika berhasil:**
-
+**Response (Success):**
 ```json
 {
-    "status": "success",
-    "message": "Product deleted successfully"
+  "status": "success",
+  "message": "Product deleted successfully"
 }
-```
-
-* **Catatan:**
-
-  * Gambar yang terkait produk akan dihapus dari storage.
-
----
-
-## 🖼️ Akses Gambar
-
-Gambar tersimpan di folder `storage/app/public/products`.
-Setelah menjalankan:
-
-```bash
-php artisan storage:link
-```
-
-Gambar dapat diakses melalui URL:
-
-```
-http://localhost:8000/storage/products/namafile.jpg
-```
-
----
-
-## 🧪 Testing API dengan Postman
-
-1. Import endpoint ke Postman.
-2. Gunakan URL `http://localhost:8000/api`.
-3. Sesuaikan method dan body sesuai dokumentasi di atas.
-
----
-
-## 📚 Tentang Laravel
-
-Laravel adalah framework aplikasi web dengan sintaks yang ekspresif dan elegan.
-Pelajari lebih lanjut di [Laravel Documentation](https://laravel.com/docs).
-
----
-
-## 📄 Lisensi
-
-Proyek ini menggunakan [MIT License](https://opensource.org/licenses/MIT).
-
-```
-
----
-
-Kalau mau, aku bisa buatkan **file `.json` Postman Collection** supaya tinggal di-import dan langsung bisa testing semua endpoint.  
-Kalau setuju, nanti aku sertakan di repo kamu biar praktis.
 ```
