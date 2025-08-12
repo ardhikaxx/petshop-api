@@ -1,6 +1,5 @@
 ---
 
-````markdown
 # Petshop API - Product Management
 
 Petshop API adalah projek berbasis Laravel yang menyediakan endpoint untuk mengelola data produk, termasuk upload gambar dengan penyimpanan di `storage/public` yang dapat diakses publik.
@@ -23,7 +22,7 @@ Petshop API adalah projek berbasis Laravel yang menyediakan endpoint untuk menge
    ```bash
    git clone https://github.com/username/petshop-api.git
    cd petshop-api
-````
+    ```
 
 2. **Install Dependency**
 
